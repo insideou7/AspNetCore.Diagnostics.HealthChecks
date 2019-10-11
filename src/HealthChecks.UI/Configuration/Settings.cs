@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Web;
 
 namespace HealthChecks.UI.Configuration
 {
@@ -80,5 +81,15 @@ namespace HealthChecks.UI.Configuration
         public string Uri { get; set; }
         public string Payload { get; set; }
         public string RestoredPayload { get; set; }
+
+        public string GetPayload(string name, string failure = "", bool isHealthy = false, string description = null)
+        {
+            var payload = isHealthy ? RestoredPayload : Payload;
+            payload = payload.Replace(Keys.LIVENESS_BOOKMARK, HttpUtility.JavaScriptStringEncode(name))
+                .Replace(Keys.FAILURE_BOOKMARK, HttpUtility.JavaScriptStringEncode(failure))
+                .Replace(Keys.DESCRIPTIONS_BOOKMARK, HttpUtility.JavaScriptStringEncode(description));
+
+            return payload;
+        }
     }
 }

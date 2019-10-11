@@ -53,10 +53,7 @@ namespace HealthChecks.UI.Core.Notifications
 
                 foreach (var webHook in _settings.Webhooks)
                 {
-                    var payload = isHealthy ? webHook.RestoredPayload : webHook.Payload;
-                    payload = payload.Replace(Keys.LIVENESS_BOOKMARK, name)
-                        .Replace(Keys.FAILURE_BOOKMARK, failure)
-                        .Replace(Keys.DESCRIPTIONS_BOOKMARK, description);
+                    var payload = webHook.GetPayload(name, failure, isHealthy, description);
 
                     await SendRequest(webHook.Uri, webHook.Name, payload);
                 }
