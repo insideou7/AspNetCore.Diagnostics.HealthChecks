@@ -4,12 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
-namespace UnitTests.DependencyInjection.System
+namespace UnitTests.HealthChecks.DependencyInjection.System
 {
     public class process_registration_should
     {

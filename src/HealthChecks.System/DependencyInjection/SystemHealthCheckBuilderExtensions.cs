@@ -15,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         const string WORKINGSET_NAME = "workingset";
         const string VIRTUALMEMORYSIZE_NAME = "virtualmemory";
         const string PROCESS_NAME = "process";
+        const string PROCESS_ALLOCATED_MEMORY = "process_allocated_memory";
         const string WINDOWS_SERVICE_NAME = "windowsservice";
 
         /// <summary>
@@ -138,6 +139,33 @@ namespace Microsoft.Extensions.DependencyInjection
                 timeout));
         }
 
+        /// <summary>
+        /// Adds a healthcheck that allows to check the allocated bytes in memory and configure a threshold
+        /// </summary>
+        /// <param name="builder">The <see cref="IHealthChecksBuilder"/>.</param>
+        /// <param name="maximumMegabytesAllocated">The maximum megabytes allowed to be allocated by the process</param>
+        /// <param name="name">The health check name. Optional. If <c>null</c> the type name 'process' will be used for the name.</param>
+        /// <param name="failureStatus">
+        /// The <see cref="HealthStatus"/> that should be reported when the health check fails. Optional. If <c>null</c> then
+        /// the default status of <see cref="HealthStatus.Unhealthy"/> will be reported.
+        /// </param>
+        /// <param name="tags">A list of tags that can be used to filter sets of health checks. Optional.</param>
+        /// <param name="timeout">An optional System.TimeSpan representing the timeout of the check.</param>
+        /// <returns>The <see cref="IHealthChecksBuilder"/>.</returns>
+        public static IHealthChecksBuilder AddProcessAllocatedMemoryHealthCheck(
+            this IHealthChecksBuilder builder, int maximumMegabytesAllocated, string name = default,
+            HealthStatus? failureStatus = default, IEnumerable<string> tags = default, TimeSpan? timeout = default)
+        {
+            if (maximumMegabytesAllocated <= 0) throw new ArgumentException($"{nameof(maximumMegabytesAllocated)} should be greater than zero");
+
+            return builder.Add(new HealthCheckRegistration(
+                name ?? PROCESS_ALLOCATED_MEMORY,
+                sp => new ProcessAllocatedMemoryHealthCheck(maximumMegabytesAllocated),
+                failureStatus,
+                tags,
+                timeout));
+        }
+
 
         /// <summary>
         /// Add a healthcheck that allows to check a predicate against the configured windows service.
@@ -145,6 +173,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="builder">The <see cref="IHealthChecksBuilder"/>.</param>
         /// <param name="serviceName">The name of the service</param>
         /// <param name="predicate">Process[] predicate to configure checks</param>
+        /// <<param name="machineName">Machine where the service resides in. Optional</param>
         /// <param name="name">The health check name. Optional. If <c>null</c> the type name 'windowsservice' will be used for the name.</param>
         /// <param name="failureStatus">
         /// The <see cref="HealthStatus"/> that should be reported when the health check fails. Optional. If <c>null</c> then
@@ -154,7 +183,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="timeout">An optional System.TimeSpan representing the timeout of the check.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/>.</returns>
         public static IHealthChecksBuilder AddWindowsServiceHealthCheck(
-            this IHealthChecksBuilder builder, string serviceName, Func<ServiceController, bool> predicate, string name = default,
+            this IHealthChecksBuilder builder, string serviceName, Func<ServiceController, bool> predicate,
+            string machineName = default,
+            string name = default,
             HealthStatus? failureStatus = default, IEnumerable<string> tags = default, TimeSpan? timeout = default)
         {
 
@@ -168,7 +199,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return builder.Add(new HealthCheckRegistration(
                 name ?? WINDOWS_SERVICE_NAME,
-                sp => new WindowsServiceHealthCheck(serviceName, predicate),
+                sp => new WindowsServiceHealthCheck(serviceName, predicate, machineName),
                 failureStatus,
                 tags,
                 timeout));

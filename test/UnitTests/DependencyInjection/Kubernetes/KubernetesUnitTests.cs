@@ -1,14 +1,13 @@
 using System.Linq;
 using FluentAssertions;
 using HealthChecks.Kubernetes;
-using HealthChecks.MongoDb;
 using k8s;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace UnitTests.DependencyInjection.Kubernetes
+namespace UnitTests.HealthChecks.DependencyInjection.Kubernetes
 {
     public class kubernetes_registration_should
     {

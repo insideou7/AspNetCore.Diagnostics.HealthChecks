@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,25 +10,30 @@ namespace HealthChecks.AzureStorage
         : IHealthCheck
     {
         private readonly string _connectionString;
-        public AzureBlobStorageHealthCheck(string connectionString)
+        private readonly string _containerName;
+        public AzureBlobStorageHealthCheck(string connectionString, string containerName = default)
         {
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
-            _connectionString = connectionString;
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _containerName = containerName;
         }
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             try
             {
-                var storageAccount = CloudStorageAccount.Parse(_connectionString);
-                var blobClient = storageAccount.CreateCloudBlobClient();
+                var blobServiceClient = new BlobServiceClient(_connectionString);
+                var serviceProperties = await blobServiceClient.GetPropertiesAsync(cancellationToken);
+                
+                if (!string.IsNullOrEmpty(_containerName))
+                {
+                    var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
 
-                var serviceProperties = await blobClient.GetServicePropertiesAsync(
-                    new BlobRequestOptions(),
-                    operationContext: null,
-                    cancellationToken: cancellationToken);
+                    if (!await containerClient.ExistsAsync(cancellationToken))
+                    {
+                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"Container '{_containerName}' not exists");
+                    }
+
+                    await containerClient.GetPropertiesAsync(cancellationToken: cancellationToken);
+                }
 
                 return HealthCheckResult.Healthy();
             }
