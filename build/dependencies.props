@@ -70,7 +70,7 @@
     <MicrosoftAzureEventHubs>2.2.1</MicrosoftAzureEventHubs>
     <MicrosoftAzureServiceBus>3.2.1</MicrosoftAzureServiceBus>
     <AWSSDKDynamoDBv2>3.3.101.69</AWSSDKDynamoDBv2>
-    <NewtonsoftJson>12.0.2</NewtonsoftJson>
+    <NewtonsoftJson>12.0.3</NewtonsoftJson>
     <EventStoreClient>5.0.2</EventStoreClient>
     <MicrosoftApplicationInsights>2.10.0</MicrosoftApplicationInsights>
     <PrometheusNet>3.5.0</PrometheusNet>
