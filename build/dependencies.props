@@ -65,7 +65,7 @@
     <GoogleCloudFirestore>1.0.0</GoogleCloudFirestore>
     <HangfireCore>1.7.6</HangfireCore>
     <MicrosoftAzureCosmosTable>1.0.7</MicrosoftAzureCosmosTable>
-    <AzureStorageBlobs>12.4.2</AzureStorageBlobs>
+    <AzureStorageBlobs>12.8.0</AzureStorageBlobs>
     <AzureStorageQueues>12.3.0</AzureStorageQueues>
     <MicrosoftAzureEventHubs>2.2.1</MicrosoftAzureEventHubs>
     <MicrosoftAzureServiceBus>3.2.1</MicrosoftAzureServiceBus>
