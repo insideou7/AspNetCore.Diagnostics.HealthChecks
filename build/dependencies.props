@@ -22,7 +22,7 @@
     <MicrosoftExtensionsHttp>3.1.3</MicrosoftExtensionsHttp>
     <MicrosoftExtensionsDependencyInjection>3.1.3</MicrosoftExtensionsDependencyInjection>
     <MicrosoftExtensionsDependencyInjectionAbstractions>3.1.3</MicrosoftExtensionsDependencyInjectionAbstractions>
-    <MicrosoftAspNetCoreTestHost>3.1.3</MicrosoftAspNetCoreTestHost>
+    <MicrosoftAspNetCoreTestHost>5.0.4</MicrosoftAspNetCoreTestHost>
     <MicrosoftExtensionsLoggingConsole>3.1.3</MicrosoftExtensionsLoggingConsole>
     <MicrosoftEntityFrameworkCore>3.1.3</MicrosoftEntityFrameworkCore>
     <MicrosoftEntityFrameworkCoreDesign>3.1.3</MicrosoftEntityFrameworkCoreDesign>
